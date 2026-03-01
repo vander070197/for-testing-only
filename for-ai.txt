@@ -1,74 +1,136 @@
-movies-ajax.php:
-<?php
+movies.php:
+<h2>Movies</h2>
 
-require __DIR__ . '/../systcon/db.php';
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                
+                <div class="container">
 
-require __DIR__ . "/../function.php";
+                
+                <h4 class="mb-3">Movies List</h4>
 
-$movies = new MoviesFunctions();
+                <!-- Action Buttons -->
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-success" id="btnAdd">
+                    <i class="bi bi-plus-circle"></i> Add Movies
+                </button>
 
-$action = $_POST['action'] ?? '';
+                <button class="btn btn-primary" id="btnUpdate">
+                    <i class="bi bi-pencil-square"></i> Update Movies
+                </button>
 
-if ($action == 'view') {
-    $result = $movies->getMovies();
+                <button class="btn btn-danger" id="btnDelete">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </div>
 
-    $data = [];
+           <?php  include __DIR__ . '/../modals/movie-modals.php'; ?>
 
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
-    }
+            <!-- Search Input -->
+            <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search..." >
+            <!-- Table -->
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th width="50"> <input type="checkbox" id="selectAll"> </th>
+                    <th>Title</th>
+                    <th>Year of Release</th>
+                    <th>Main Cast</th>
+                    <th>Watched Status1</th>
+                    <!-- <th>DATE Added</th> -->
+                </tr>
+                </thead>
+                <tbody id="moviesTable">
+                
+                </tbody>
+            </table>
+            </div>
 
-    echo json_encode($data);
-}
 
-?>
+            </div>
+        </div>
+    </div>
+</div>
 
-function.php:
-<?php
-require_once __DIR__ . '/systcon/db.php';
 
-class MoviesFunctions {
+movie-modals.php:
+<!-- Add / Update Modal -->
+<div class="modal fade" id="movieModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <form id="movieForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="movieModalTitle">Add Movie</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
 
-    private $conn;
 
-    public function __construct() {
-        global $conn;
-        $this->conn = $conn;
-    }
+        <div id="formAlert" class="alert d-none"></div>
 
-    public function getMovies() {
-        return $this->conn->query("SELECT * FROM movies ORDER BY id DESC");
-    }
-}
+        <div class="modal-body">
+          <input type="hidden" id="movieId">
 
-script-movies.js
-$(document).ready(function(){
-    loadUsers();
-});
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" required>
+          </div>
 
-function loadUsers(){
-    $.ajax({
-        url: "movies-files/movies-ajax.php?action=view",
-        method: "GET",
-        dataType: "json",
-        success: function(data){
+          <div class="mb-3">
+            <label class="form-label">Year of Release</label>
+            <input type="number" class="form-control" id="year" required>
+          </div>
 
-            let html = '';
+          <div class="mb-3">
+            <label class="form-label">Main Cast</label>
+            <textarea class="form-control" id="cast" rows="2"></textarea>
+          </div>
 
-            data.forEach(movies => {
-                html += `
-                    <tr>
-                        <td>${movies.title}</td>
-                        <td>${movies.year_of_release}</td>
-                         <td>${movies.main_cast}</td>
-                        <td>${movies.watched_status}</td>
+          <div class="mb-3">
+            <label class="form-label">Watched Status</label>
+            <select class="form-select" id="status">
+              <option value="Watched">Watched</option>
+              <option value="Not Watched">Not Watched</option>
+            </select>
+          </div>
 
-                `;
-            });
+          <div class="mb-3">
+            <label class="form-label">Date Added</label>
+            <input type="date" class="form-control" id="date_added">
+          </div>
+        </div>
 
-            $('#moviesTable').html(html);
-         
-            console.log(data);
-        }
-    });
-}
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" id="saveMovieBtn">
+            Save
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p class="fs-5">Are you sure you want to delete this movie?</p>
+      </div>
+
+      <div class="modal-footer justify-content-center">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-danger" id="confirmDelete">
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
