@@ -1,3 +1,8 @@
+<div class="d-flex gap-2 mb-3">
+<button class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#movieModal">
+	<i class="bi bi-plus-circle"></i> Add Movies
+</button>
+
 <!-- Bootstrap Modal -->
 <div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog w-90 ">
@@ -32,3 +37,4 @@
     </div>
   </div>
 </div>
+
