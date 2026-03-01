@@ -1,0 +1,74 @@
+movies-ajax.php:
+<?php
+
+require __DIR__ . '/../systcon/db.php';
+
+require __DIR__ . "/../function.php";
+
+$movies = new MoviesFunctions();
+
+$action = $_POST['action'] ?? '';
+
+if ($action == 'view') {
+    $result = $movies->getMovies();
+
+    $data = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    echo json_encode($data);
+}
+
+?>
+
+function.php:
+<?php
+require_once __DIR__ . '/systcon/db.php';
+
+class MoviesFunctions {
+
+    private $conn;
+
+    public function __construct() {
+        global $conn;
+        $this->conn = $conn;
+    }
+
+    public function getMovies() {
+        return $this->conn->query("SELECT * FROM movies ORDER BY id DESC");
+    }
+}
+
+script-movies.js
+$(document).ready(function(){
+    loadUsers();
+});
+
+function loadUsers(){
+    $.ajax({
+        url: "movies-files/movies-ajax.php?action=view",
+        method: "GET",
+        dataType: "json",
+        success: function(data){
+
+            let html = '';
+
+            data.forEach(movies => {
+                html += `
+                    <tr>
+                        <td>${movies.title}</td>
+                        <td>${movies.year_of_release}</td>
+                         <td>${movies.main_cast}</td>
+                        <td>${movies.watched_status}</td>
+
+                `;
+            });
+
+            $('#moviesTable').html(html);
+         
+            console.log(data);
+        }
+    });
+}
