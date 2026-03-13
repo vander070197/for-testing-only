@@ -1,3 +1,51 @@
+JS CODE:
+var tabs = $(".tablink"); var items = $(".item");tabs.click(function () {items.removeClass("show");items.addClass("hide");tabs.removeClass("active");$(this).addClass("active");var dataID = $(this).attr("data-id");var contains_dataID = items.filter('[data-id="' + dataID + '"]');var allTab = tabs.filter('[data-id="all"]');if ($(this).is(contains_dataID)) {items.removeClass("hide").addClass("show");} else {contains_dataID.removeClass("hide").addClass("show");}
+
+css code:
+.page_nav2 ul li a {
+	display: block !important;
+}
+
+#navtabs-container a{font-family: var(--priFont);}
+.item {  width: 39%;}
+@media only screen
+and (max-width : 1300px) {
+  main { width: 67%; }
+#breadcrumbs { width: 66%; }
+}
+
+@media only screen
+and (max-width : 1000px) {
+  .sidebar { width: 100%; float: none; margin: 0; }
+
+  #breadcrumbs { width: 100%; }
+  main { width: 100%; }
+  
+  
+  #breadcrumbs { float: none; }
+  
+  main { padding: 0; }
+  
+  .main_con { padding: 45px 25px 0; }
+}
+
+@media only screen
+and (max-width : 600px) {
+  .item { width: 100%; }
+}
+
+HTML:
+<div class="products_con">
+<ul id="navtabs-container">
+ 	<li><a class="tablink" data-id="Burgers" href="javascript:;">Burgers</a></li>
+ 	<li><a class="tablink" data-id="Salads" href="javascript:;">Salads</a></li>
+ 	<li><a class="tablink" data-id="Hotdogs" href="javascript:;">Hot Dog</a></li>
+ 	<li><a class="tablink" data-id="Panini" href="javascript:;">Panini</a></li>
+ 	<li><a class="tablink" data-id="Chicken Wings" href="javascript:;">Chicken Wings</a></li>
+ 	<li><a class="tablink" data-id="Pizza" href="javascript:;">Pizza</a></li>
+ 	<li><a class="tablink" data-id="Kids Menu" href="javascript:;">Kids Menu</a></li>
+ 	<li><a class="tablink" data-id="Sides" href="javascript:;">Side Orders</a></li>
+</ul>
 <div class="items-con">
 <div class="item" data-id="Burgers">
 <h2>Classic <small>Cheeseburgers</small></h2>
